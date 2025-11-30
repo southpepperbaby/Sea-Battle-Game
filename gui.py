@@ -273,4 +273,6 @@ def show_winner(self, winner):
         self.window,
         text="Продолжить",
         command=on_continue
+    )
 btn.pack()
+
