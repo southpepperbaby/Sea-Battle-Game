@@ -273,5 +273,6 @@ def show_message(self, text, on_continue):
         self.window,
         text="Продолжить",
         command=on_continue
+    )
 btn.pack()
 
