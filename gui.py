@@ -392,6 +392,10 @@ class BattleshipGUI:
 
     def bot_move(self):
         """Ход бота и обновление экрана"""
+        # Если игра уже закончена — ничего не делаем
+        if self.game.game_over:
+            return
+
         info = self.game.bot_turn()
         if not info:
             return
@@ -403,14 +407,20 @@ class BattleshipGUI:
             "win": "БОТ ПОБЕДИЛ!",
         }
 
-        self.result_label.config(text=messages.get(info["result"], ""))
+        result = info["result"]
+        self.result_label.config(text=messages.get(result, ""))
 
-        if info["result"] == "win":
+        if result == "win":
             self.show_winner("Компьютер")
             return
 
         self.update_game_display()
 
+        if (not self.game.game_over
+                and self.game.current_player == 2
+                and result in ("hit", "destroy")):
+            self.window.after(500, self.bot_move)
+                    
     def show_message(self, text, on_continue):
         """Показать сообщение с кнопкой 'Продолжить'"""
         for widget in self.window.winfo_children():
@@ -433,3 +443,4 @@ class BattleshipGUI:
 if __name__ == "__main__":
     app = BattleshipGUI()
     app.run()
+
