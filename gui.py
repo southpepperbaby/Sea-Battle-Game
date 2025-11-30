@@ -160,12 +160,10 @@ def setup_game_screen(self, game, player1_name, player2_name):
     for widget in self.window.winfo_children():
         widget.destroy()
     self.game = game
-    # Информация о ходе
     self.turn_label = tk.Label(self.window, text="", font=("Arial", 14))
     self.turn_label.pack(pady=10)
     fields_frame = tk.Frame(self.window)
     fields_frame.pack()
-    # Поле противника (по нему стреляем)
     frame1, self.enemy_canvas = self.create_field_canvas(
         fields_frame,
         "Поле противника",
@@ -173,7 +171,6 @@ def setup_game_screen(self, game, player1_name, player2_name):
         click_callback=self.shoot_click
     )
     frame1.pack(side=tk.LEFT, padx=20)
-    # Своё поле (только смотрим)
     frame2, self.my_canvas = self.create_field_canvas(
         fields_frame,
         "Ваше поле",
@@ -227,4 +224,53 @@ def show_winner(self, winner):
         font=("Arial", 14),
         command=self.setup_main_menu
     )
+
     btn.pack()
+ def start_vs_friend(self):
+    """Начать игру с другом"""
+    from game_modes import TwoPlayerGame
+    self.game = TwoPlayerGame()
+    self.setup_placement_screen(
+        "Игрок 1",
+        self.game.board1,
+        self.player1_ready
+    )
+ def player1_ready(self):
+    """Игрок 1 закончил расстановку"""
+    self.game.setup_phase_complete(1)
+    self.show_message(
+        "Передайте компьютер Игроку 2",
+        lambda: self.setup_placement_screen(
+            "Игрок 2",
+            self.game.board2,
+            self.player2_ready
+        )
+    )
+ def player2_ready(self):
+    """Игрок 2 закончил расстановку"""
+    self.game.setup_phase_complete(2)
+    self.setup_game_screen(self.game, "Игрок 1", "Игрок 2")
+ def start_vs_bot(self):
+    """Начать игру с ботом"""
+    from game_modes import SinglePlayerGame
+    self.game = SinglePlayerGame(difficulty="medium")
+    self.setup_placement_screen(
+        "Вы",
+        self.game.board1,
+        self.start_bot_game
+    )
+ def start_bot_game(self):
+    """Начать игру после расстановки"""
+    self.game.player_setup_complete()
+    self.setup_game_screen_vs_bot()
+ def show_message(self, text, on_continue):
+    """Показать сообщение с кнопкой продолжить"""
+    for widget in self.window.winfo_children():
+        widget.destroy()
+    label = tk.Label(self.window, text=text, font=("Arial", 16))
+    label.pack(pady=50)
+    btn = tk.Button(
+        self.window,
+        text="Продолжить",
+        command=on_continue
+btn.pack()
