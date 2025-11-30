@@ -226,7 +226,7 @@ def show_winner(self, winner):
     )
 
     btn.pack()
- def start_vs_friend(self):
+def start_vs_friend(self):
     """Начать игру с другом"""
     from game_modes import TwoPlayerGame
     self.game = TwoPlayerGame()
@@ -235,7 +235,7 @@ def show_winner(self, winner):
         self.game.board1,
         self.player1_ready
     )
- def player1_ready(self):
+def player1_ready(self):
     """Игрок 1 закончил расстановку"""
     self.game.setup_phase_complete(1)
     self.show_message(
@@ -246,11 +246,11 @@ def show_winner(self, winner):
             self.player2_ready
         )
     )
- def player2_ready(self):
+def player2_ready(self):
     """Игрок 2 закончил расстановку"""
     self.game.setup_phase_complete(2)
     self.setup_game_screen(self.game, "Игрок 1", "Игрок 2")
- def start_vs_bot(self):
+def start_vs_bot(self):
     """Начать игру с ботом"""
     from game_modes import SinglePlayerGame
     self.game = SinglePlayerGame(difficulty="medium")
@@ -259,11 +259,11 @@ def show_winner(self, winner):
         self.game.board1,
         self.start_bot_game
     )
- def start_bot_game(self):
+def start_bot_game(self):
     """Начать игру после расстановки"""
     self.game.player_setup_complete()
     self.setup_game_screen_vs_bot()
- def show_message(self, text, on_continue):
+def show_message(self, text, on_continue):
     """Показать сообщение с кнопкой продолжить"""
     for widget in self.window.winfo_children():
         widget.destroy()
@@ -274,3 +274,4 @@ def show_winner(self, winner):
         text="Продолжить",
         command=on_continue
 btn.pack()
+
